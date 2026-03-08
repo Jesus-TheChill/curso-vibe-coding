@@ -49,3 +49,18 @@ export async function getFeaturedProperties(): Promise<Property[]> {
 
   return (data as Property[]) ?? [];
 }
+
+export async function getPropertyBySlug(slug: string): Promise<Property | null> {
+  const { data, error } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error) {
+    console.error("Error fetching property by slug:", error.message);
+    return null;
+  }
+
+  return data as Property;
+}

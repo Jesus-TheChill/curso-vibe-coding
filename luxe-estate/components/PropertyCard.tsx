@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Property } from "@/lib/types";
 
 type FeaturedProps = { property: Property };
@@ -13,12 +14,12 @@ function formatPrice(price: number): string {
 
 export function FeaturedPropertyCard({ property }: FeaturedProps) {
   return (
-    <div className="group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer">
+    <Link href={`/properties/${property.slug}`} className="group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer block">
       <div className="aspect-[4/3] w-full overflow-hidden relative">
         <img
           alt={property.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          src={property.image_url}
+          src={property.images[0]}
         />
         {property.tag && (
           <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-nordic-dark">
@@ -52,21 +53,22 @@ export function FeaturedPropertyCard({ property }: FeaturedProps) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
 export function PropertyListingCard({ property, className = "" }: ListingProps) {
-  const statusClass = property.status === "FOR RENT" ? "bg-mosque/90" : "bg-nordic-dark/90";
+  const statusClass = property.status === "For Rent" ? "bg-mosque/90" : "bg-nordic-dark/90";
   const cardClass = "bg-white rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-all duration-300 group cursor-pointer h-full flex flex-col " + className;
 
   return (
-    <article className={cardClass}>
-      <div className="relative aspect-[4/3] overflow-hidden">
+    <Link href={`/properties/${property.slug}`} className="block h-full">
+      <article className={cardClass}>
+        <div className="relative aspect-[4/3] overflow-hidden">
         <img
           alt={property.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          src={property.image_url}
+          src={property.images[0]}
         />
         <button className="absolute top-3 right-3 p-2 bg-white/90 rounded-full hover:bg-mosque hover:text-white transition-colors text-nordic-dark">
           <span className="material-icons text-lg">favorite_border</span>
@@ -99,5 +101,6 @@ export function PropertyListingCard({ property, className = "" }: ListingProps) 
         </div>
       </div>
     </article>
+  </Link>
   );
 }

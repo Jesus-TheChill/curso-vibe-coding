@@ -1,15 +1,18 @@
 export type Property = {
   id: string;
   title: string;
+  slug: string;
   location: string;
+  lat: number;
+  lng: number;
   price: number;
-  price_suffix: string | null;
+  price_suffix: string;
   beds: number;
   baths: number;
-  area: string;
-  image_url: string;
-  status: "FOR SALE" | "FOR RENT";
-  tag: string | null;
+  area: number;
+  images: string[];
+  tag: string;
   is_featured: boolean;
+  status: 'For Sale' | 'For Rent';
   created_at: string;
 };
