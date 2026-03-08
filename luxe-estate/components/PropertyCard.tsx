@@ -1,17 +1,30 @@
-import { PropertyCollection, PropertyListing } from "@/lib/mockData";
+import { Property } from "@/lib/types";
 
-export function FeaturedPropertyCard({ property }: { property: PropertyCollection }) {
+type FeaturedProps = { property: Property };
+type ListingProps = { property: Property; className?: string };
+
+function formatPrice(price: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(price);
+}
+
+export function FeaturedPropertyCard({ property }: FeaturedProps) {
   return (
     <div className="group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer">
       <div className="aspect-[4/3] w-full overflow-hidden relative">
         <img
           alt={property.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          src={property.imageUrl}
+          src={property.image_url}
         />
-        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-nordic-dark">
-          {property.tag}
-        </div>
+        {property.tag && (
+          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-nordic-dark">
+            {property.tag}
+          </div>
+        )}
         <button className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic-dark hover:bg-mosque hover:text-white transition-all">
           <span className="material-icons text-xl">favorite_border</span>
         </button>
@@ -25,7 +38,7 @@ export function FeaturedPropertyCard({ property }: { property: PropertyCollectio
               <span className="material-icons text-sm">place</span> {property.location}
             </p>
           </div>
-          <span className="text-xl font-semibold text-mosque">{property.price}</span>
+          <span className="text-xl font-semibold text-mosque">{formatPrice(property.price)}</span>
         </div>
         <div className="flex items-center gap-6 mt-6 pt-6 border-t border-nordic-dark/5">
           <div className="flex items-center gap-2 text-nordic-muted text-sm">
@@ -35,7 +48,7 @@ export function FeaturedPropertyCard({ property }: { property: PropertyCollectio
             <span className="material-icons text-lg">bathtub</span> {property.baths} Baths
           </div>
           <div className="flex items-center gap-2 text-nordic-muted text-sm">
-            <span className="material-icons text-lg">square_foot</span> {property.area} m²
+            <span className="material-icons text-lg">square_foot</span> {property.area} m2
           </div>
         </div>
       </div>
@@ -43,25 +56,33 @@ export function FeaturedPropertyCard({ property }: { property: PropertyCollectio
   );
 }
 
-export function PropertyListingCard({ property, className = "" }: { property: PropertyListing, className?: string }) {
+export function PropertyListingCard({ property, className = "" }: ListingProps) {
+  const statusClass = property.status === "FOR RENT" ? "bg-mosque/90" : "bg-nordic-dark/90";
+  const cardClass = "bg-white rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-all duration-300 group cursor-pointer h-full flex flex-col " + className;
+
   return (
-    <article className={`bg-white rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-all duration-300 group cursor-pointer h-full flex flex-col ${className}`}>
+    <article className={cardClass}>
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
           alt={property.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          src={property.imageUrl}
+          src={property.image_url}
         />
         <button className="absolute top-3 right-3 p-2 bg-white/90 rounded-full hover:bg-mosque hover:text-white transition-colors text-nordic-dark">
           <span className="material-icons text-lg">favorite_border</span>
         </button>
-        <div className={`absolute bottom-3 left-3 text-white text-xs font-bold px-2 py-1 rounded ${property.status === 'FOR RENT' ? 'bg-mosque/90' : 'bg-nordic-dark/90'}`}>
+        <div className={"absolute bottom-3 left-3 text-white text-xs font-bold px-2 py-1 rounded " + statusClass}>
           {property.status}
         </div>
       </div>
       <div className="p-4 flex flex-col flex-grow">
         <div className="flex justify-between items-baseline mb-2">
-          <h3 className="font-bold text-lg text-nordic-dark">{property.price}{property.priceSuffix && <span className="text-sm font-normal text-nordic-muted">{property.priceSuffix}</span>}</h3>
+          <h3 className="font-bold text-lg text-nordic-dark">
+            {formatPrice(property.price)}
+            {property.price_suffix && (
+              <span className="text-sm font-normal text-nordic-muted">{property.price_suffix}</span>
+            )}
+          </h3>
         </div>
         <h4 className="text-nordic-dark font-medium truncate mb-1">{property.title}</h4>
         <p className="text-nordic-muted text-xs mb-4">{property.location}</p>
@@ -73,7 +94,7 @@ export function PropertyListingCard({ property, className = "" }: { property: Pr
             <span className="material-icons text-sm text-mosque/80">bathtub</span> {property.baths}
           </div>
           <div className="flex items-center gap-1 text-nordic-muted text-xs">
-            <span className="material-icons text-sm text-mosque/80">square_foot</span> {property.area}m²
+            <span className="material-icons text-sm text-mosque/80">square_foot</span> {property.area}m2
           </div>
         </div>
       </div>
